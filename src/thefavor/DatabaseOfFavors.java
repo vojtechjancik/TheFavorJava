@@ -3,6 +3,9 @@ package thefavor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Database of Favors with Contacts
+ */
 public class DatabaseOfFavors {
     public static List<FavorObject> favorObjectList = new ArrayList<>();
     public static List<Contact> contactList = new ArrayList<>();
