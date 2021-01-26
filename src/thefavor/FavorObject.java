@@ -5,11 +5,13 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-
 import static thefavor.Contact.createContact;
 import static thefavor.DatabaseOfFavors.contactList;
 import static thefavor.DatabaseOfFavors.favorObjectList;
 
+/**
+ * Class represents object Favor
+ */
 public class FavorObject {
     private int levelOfFavor;
     private String nameOfFavor;
