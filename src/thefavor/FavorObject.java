@@ -10,7 +10,7 @@ import static thefavor.DatabaseOfFavors.contactList;
 import static thefavor.DatabaseOfFavors.favorObjectList;
 
 /**
- * Class represents object Favor
+ * Class represents object Favor, creating, deleting and editing
  */
 public class FavorObject {
     private int levelOfFavor;
