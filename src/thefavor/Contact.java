@@ -5,7 +5,7 @@ import java.util.Scanner;
 import static thefavor.DatabaseOfFavors.contactList;
 
 /**
- * Class represents object Contact and his creating
+ * Class represents object Contact and his creating, editing and deleting
  */
 public class Contact {
     private String firstName;
