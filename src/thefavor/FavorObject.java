@@ -10,7 +10,7 @@ import static thefavor.DatabaseOfFavors.contactList;
 import static thefavor.DatabaseOfFavors.favorObjectList;
 
 /**
- * Class represents object Favor
+ * Class represents object Favor, creating, deleting and editing
  */
 public class FavorObject {
     private int levelOfFavor;
@@ -90,52 +90,53 @@ public class FavorObject {
         Contact contact = null;
 
         System.out.println("\n === Guide to create a new favor ===\n");
+
+        //Save value of the new favor name
         System.out.print("Write name of the favor: ");
         String nameOfTheFavor = sc.nextLine();
+        //Save value of the new favor description
         System.out.print("Write description: ");
         String description = sc.nextLine();
-        System.out.print("Write last name of contact: ");
-        String contactName = sc.nextLine().trim();
 
-        boolean isNotChoosen = true;
-        while (isNotChoosen) {
-            for (Contact nameOfContact : contactList) {
-                if (nameOfContact.getLastName().equals(contactName)) {
-                    System.out.print("\nYou mean this contact? " + nameOfContact + "\n(y/n) ");
-                    String answer = sc.nextLine().trim().toLowerCase();
+        //Save contact for new favor
+        Contact contactName = setContact();
 
-                    if (answer.equals("y")) {
-                        contact = nameOfContact;
-                        isNotChoosen = false;
-                        break;
-                    }
-                } else {
-                    System.out.print("No contact found. Do you want to create a new one? (y/n) ");
-                    String answer = sc.nextLine().trim().toLowerCase();
-                    if (answer.equals("y")) {
-                        contact = createContact();
-                        isNotChoosen = false;
-                        break;
-                    } else if (answer.equals("n")) {
-                        return;
-                    } else {
-                        System.out.print("\nWrong command.\n");
-                    }
-                }
-            }
+        //Save type of favor
+        String favorInputOutput = setInputOutputChoice();
+
+        //Set level of favor
+        int levelOfFavor = setLevelOfFavor();
+
+        //Show new favor for saving
+        System.out.print("\n === Your new Favor is ===" + "\nName of Favor: " + nameOfTheFavor + "\nDescription: " + description +
+                "\nContact: " + contactName + "\nLevel of Favor: " + levelOfFavor + "\nFavor type: " + favorInputOutput + "\n");
+
+        //Saving new favor
+        System.out.print("Do you want to save new favor? (y/n): ");
+        String finalAnswer = sc.nextLine().toLowerCase().trim();
+
+        if (finalAnswer.equals("y")) {
+            FavorObject newFavorCreated = new FavorObject(nameOfTheFavor, description, contactName, levelOfFavor, favorInputOutput);
+            favorObjectList.add(newFavorCreated);
+            System.out.println("\n=== New favor is ====" + newFavorCreated + "\n");
+        } else if (finalAnswer.equals("n")) {
+            System.out.print("\nYour new favor is not saved.\n");
+        } else {
+            System.out.print("\nWrong command.\n");
         }
+    }
 
-        System.out.print("Write type of favor: ");
-        String favorInputOutput = sc.nextLine();
-        int levelOfFavorNew;
+    public static int setLevelOfFavor() {
+        Scanner sc = new Scanner(System.in);
+        int leveOfFavorNew;
         while (true) {
             System.out.print("Write level of favor (number 1 to 3): ");
             try {
                 int levelOfFavorInput = sc.nextInt();
                 if (levelOfFavorInput > 0 && levelOfFavorInput < 4) {
-                    levelOfFavorNew = levelOfFavorInput;
+                    leveOfFavorNew = levelOfFavorInput;
                     sc.nextLine();
-                    break;
+                    return leveOfFavorNew;
                 } else {
                     System.out.print("This number is out of range!\n");
                 }
@@ -144,22 +145,47 @@ public class FavorObject {
                 sc.nextLine();
             }
         }
+    }
 
-        System.out.print("\n === Your new Favor is ===" + "\nName of Favor: " + nameOfTheFavor + "\nDescription: " + description +
-                "\nContact: " + contactName + "\nLevel of Favor: " + levelOfFavorNew + "\nFavor type: " + favorInputOutput + "\n");
+    public static Contact setContact() {
+        Scanner sc = new Scanner(System.in);
+        Contact contact;
 
-        System.out.print("Do you want to save new favor? (y/n): ");
-        String finalAnswer = sc.nextLine().toLowerCase().trim();
+        System.out.print("Write last name of contact: ");
+        String contactName = sc.nextLine().trim();
 
-        if (finalAnswer.equals("y")) {
-            FavorObject newFavorCreated = new FavorObject(nameOfTheFavor, description, contact, levelOfFavorNew, favorInputOutput);
-            favorObjectList.add(newFavorCreated);
-            System.out.println("\n=== New favor is ====" + newFavorCreated + "\n");
-        } else if (finalAnswer.equals("n")) {
-            System.out.print("\nYour new favor is not saved.\n");
-        } else {
-            System.out.print("\nWrong command.\n");
+        while (true) {
+            for (Contact nameOfContact : contactList) {
+                if (nameOfContact.getLastName().equals(contactName)) {
+                    System.out.print("\nYou mean this contact? " + nameOfContact + "\n(y/n) ");
+                    String answer = sc.nextLine().trim().toLowerCase();
+
+                    if (answer.equals("y")) {
+                        contact = nameOfContact;
+                        return contact;
+                    }
+                } else {
+                    System.out.print("No contact found. Do you want to create a new one? (y/n) ");
+                    String answer = sc.nextLine().trim().toLowerCase();
+                    if (answer.equals("y")) {
+                        contact = createContact();
+                        return contact;
+                        //break;
+                    } else if (answer.equals("n")) {
+                        return null;
+                    } else {
+                        System.out.print("\nWrong command.\n");
+                    }
+                }
+            }
         }
+    }
+
+    public static String setInputOutputChoice() {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Write type of favor: ");
+        return sc.nextLine();
     }
 
     public static void deleteFavor() {
@@ -209,12 +235,40 @@ public class FavorObject {
         for (FavorObject favorObject : listOfFavors) {
             if (favorObject.getNameOfFavor().equals(favorToEdit)) {
                 indexOfFavor = listOfFavors.indexOf(favorObject);
-                System.out.print("What is your new value? ");
-                String newValue = sc.nextLine();
-                listOfFavors.get(indexOfFavor).setNameOfFavor(newValue);
-                break;
+                System.out.printf("\n=== Your favor is ===\n %s", favorObject);
+                System.out.print("\nWhat do you want to change? ");
+
+                while (true) {
+                    switch (sc.nextLine().trim().toLowerCase()) {
+                        case "nameoffavor":
+                            System.out.print("Write your new name of favor: ");
+                            listOfFavors.get(indexOfFavor).setNameOfFavor(sc.nextLine().trim());
+                            break;
+                        case "description":
+                            System.out.print("Write your new description: ");
+                            listOfFavors.get(indexOfFavor).setDescription(sc.nextLine().trim());
+                            break;
+                        case "leveloffavor":
+                            System.out.print("Write your new level of favor: ");
+                            listOfFavors.get(indexOfFavor).setLevelOfFavor(sc.nextInt());
+                            break;
+                        case "inputoroutput":
+                            System.out.print("Write your new type (input or output): ");
+                            listOfFavors.get(indexOfFavor).setFavorInputOutput(sc.nextLine().trim());
+                            break;
+                        case "contact":
+                            Contact contact = setContact();
+                            listOfFavors.get(indexOfFavor).setContact(contact);
+                            break;
+                        default:
+                            System.out.println("Wrong command.\n");
+                    }
+                    System.out.printf("\nYour edited favor looks this like this: %s\n", favorObject);
+                    return;
+                }
             } else {
                 System.out.println(favorToEdit + " doesn't exists.\n");
+                return;
             }
         }
     }
